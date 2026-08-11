@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #0B0B0B; overflow-x: hidden; }
+  body { font-family: 'JetBrains Mono', monospace; -webkit-font-smoothing: none; image-rendering: pixelated; }
+  img { image-rendering: pixelated; }
+  a { color: #A3FF00; text-decoration: none; }
+  a:hover { color: #FFE500; }
+  ::selection { background: #A3FF00; color: #0B0B0B; }
+  @keyframes bit-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes bit-blink { 0%,49%{opacity:1;} 50%,100%{opacity:0;} }
+  @keyframes bit-bob { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-6px);} }
+  .bit-marquee-track { animation: bit-marquee 55s linear infinite; }
+  .bit-marquee-wrap:hover .bit-marquee-track { animation-play-state: paused; }
+  @media (max-width: 640px){ .bit-marquee-track { animation-duration: 32s; } }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#0B0B0B;color:#FFFFFF;position:relative;">
+
+  <!-- ===== FLOATING MENU BUTTON (top-right only) ===== -->
+  <button onClick="{{ toggleMenu }}" aria-label="Menu" style="position:fixed;top:18px;right:clamp(16px,4vw,40px);z-index:60;display:flex;align-items:center;gap:10px;background:#A3FF00;color:#0B0B0B;border:3px solid #0B0B0B;box-shadow:4px 4px 0 #0B0B0B;font-family:'Press Start 2P',monospace;font-size:10px;padding:10px 14px;cursor:pointer;" style-hover="background:#FFE500;">
+    <span style="display:flex;flex-direction:column;gap:3px;">
+      <span style="width:16px;height:3px;background:#0B0B0B;display:block;"></span>
+      <span style="width:16px;height:3px;background:#0B0B0B;display:block;"></span>
+      <span style="width:16px;height:3px;background:#0B0B0B;display:block;"></span>
+    </span>
+    MENU
+  </button>
+
+  <!-- ===== MENU OVERLAY ===== -->
+  <div style="{{ menuStyle }}">
+    <div style="width:100%;max-width:520px;padding:0 24px;display:flex;flex-direction:column;gap:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <span style="font-family:'Press Start 2P',monospace;font-size:12px;color:#A3FF00;">NAVIGATION</span>
+        <button onClick="{{ toggleMenu }}" style="font-family:'Press Start 2P',monospace;font-size:12px;background:#FFE500;color:#0B0B0B;border:3px solid #0B0B0B;box-shadow:4px 4px 0 #0B0B0B;padding:10px 14px;cursor:pointer;">CLOSE X</button>
+      </div>
+      <sc-for list="{{ menuItems }}" as="m" hint-placeholder-count="5">
+        <button onClick="{{ m.action }}" style="width:100%;text-align:left;display:flex;align-items:center;gap:16px;background:#0B0B0B;color:#FFFFFF;border:3px solid #FFFFFF;box-shadow:6px 6px 0 #A3FF00;font-family:'Press Start 2P',monospace;font-size:clamp(14px,3.4vw,20px);padding:20px 22px;cursor:pointer;transition:transform .08s,box-shadow .08s;" style-hover="background:#A3FF00;color:#0B0B0B;border-color:#0B0B0B;box-shadow:6px 6px 0 #FFE500;transform:translate(2px,2px);">
+          <span style="color:#A3FF00;font-size:12px;">{{ m.num }}</span>
+          {{ m.label }}
+        </button>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ============================================================ HOME ============================================================ -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div>
+
+    <!-- ===== HERO ===== -->
+    <section id="home" style="padding:120px clamp(16px,5vw,64px) 60px;max-width:1200px;margin:0 auto;">
+      <div style="display:flex;gap:8px;margin-bottom:26px;">
+        <span style="width:12px;height:12px;background:#A3FF00;"></span>
+        <span style="width:12px;height:12px;background:#FFE500;"></span>
+        <span style="width:12px;height:12px;background:#FFFFFF;"></span>
+        <span style="width:12px;height:12px;background:#A3FF00;"></span>
+      </div>
+      <p style="font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:3px;font-size:clamp(10px,2vw,13px);color:#FFE500;margin:0 0 18px;">A 2,000 PIECE 8-BIT NFT COLLECTION</p>
+      <h1 style="font-family:'Press Start 2P',monospace;font-size:clamp(30px,8.5vw,88px);line-height:1.05;margin:0;color:#FFFFFF;word-break:break-word;text-shadow:5px 5px 0 #A3FF00;">8BIT<span style="color:#A3FF00;text-shadow:5px 5px 0 #0B0B0B;">BROKER</span></h1>
+      <div style="display:inline-flex;align-items:center;gap:14px;margin-top:26px;background:#A3FF00;color:#0B0B0B;border:3px solid #0B0B0B;box-shadow:6px 6px 0 #0B0B0B;padding:12px 20px;">
+        <span style="font-family:'Press Start 2P',monospace;font-size:clamp(16px,4vw,26px);">2,000</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:clamp(11px,2.4vw,15px);letter-spacing:1px;">NFTs</span>
+      </div>
+
+      <p style="font-family:'JetBrains Mono',monospace;font-weight:500;font-size:clamp(14px,2.4vw,17px);line-height:1.7;color:#FFFFFF;max-width:640px;margin:34px 0 0;">
+        8BITBROKER is a 2,000 NFT collection built around an 8-bit / block-pixel aesthetic.
+        Holders join <span style="color:#A3FF00;font-weight:800;">Season 1</span> by staking their NFTs and earn
+        <span style="color:#FFE500;font-weight:800;">$8BIT</span> token airdrop rewards.
+      </p>
+
+      <!-- key stats -->
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:30px;">
+        <div style="border:3px solid #A3FF00;background:#0B0B0B;padding:14px 20px;min-width:150px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11px;letter-spacing:2px;color:#FFFFFF;margin-bottom:8px;">MINT</div>
+          <div style="font-family:'Press Start 2P',monospace;font-size:14px;color:#A3FF00;">0.00025 ETH</div>
+        </div>
+        <div style="border:3px solid #FFE500;background:#0B0B0B;padding:14px 20px;min-width:150px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11px;letter-spacing:2px;color:#FFFFFF;margin-bottom:8px;">NETWORK</div>
+          <div style="font-family:'Press Start 2P',monospace;font-size:14px;color:#FFE500;">Robinhood</div>
+        </div>
+      </div>
+
+      <!-- hero buttons -->
+      <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:38px;">
+        <button onClick="{{ goStake }}" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:'Press Start 2P',monospace;font-size:13px;padding:18px 28px;background:#A3FF00;color:#0B0B0B;border:3px solid #0B0B0B;box-shadow:6px 6px 0 #0B0B0B;cursor:pointer;transition:transform .08s,box-shadow .08s;" style-hover="transform:translate(3px,3px);box-shadow:3px 3px 0 #0B0B0B;">STAKE ▸</button>
+        <a href="{{ tokenUrl }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:'Press Start 2P',monospace;font-size:13px;padding:18px 28px;background:#FFE500;color:#0B0B0B;border:3px solid #0B0B0B;box-shadow:6px 6px 0 #0B0B0B;transition:transform .08s,box-shadow .08s;" style-hover="transform:translate(3px,3px);box-shadow:3px 3px 0 #0B0B0B;">$8BIT TOKEN</a>
+      </div>
+      <div style="margin-top:18px;">
+        <a href="https://opensea.io/collection/8bitbroker" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;font-family:'Press Start 2P',monospace;font-size:10px;padding:14px 20px;background:#0B0B0B;color:#FFFFFF;border:3px solid #FFFFFF;box-shadow:5px 5px 0 #FFFFFF;transition:transform .08s,box-shadow .08s;" style-hover="background:#FFFFFF;color:#0B0B0B;transform:translate(2px,2px);box-shadow:3px 3px 0 #A3FF00;">
+          <span style="width:10px;height:10px;background:#A3FF00;display:inline-block;"></span>
+          8BITBROKER OPENSEA MARKETPLACE
+        </a>
+      </div>
+    </section>
+
+    <!-- ===== NFT GALLERY ===== -->
+    <section id="gallery" style="padding:60px 0;background:#0B0B0B;border-top:3px solid #A3FF00;border-bottom:3px solid #A3FF00;overflow:hidden;">
+      <div style="max-width:1200px;margin:0 auto;padding:0 clamp(16px,5vw,64px) 34px;">
+        <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,4vw,32px);margin:0;color:#FFFFFF;">NFT <span style="color:#A3FF00;">GALLERY</span></h2>
+        <p style="font-family:'JetBrains Mono',monospace;font-weight:500;color:#FFE500;margin:14px 0 0;font-size:14px;letter-spacing:1px;">2,000 8-BIT CHARACTERS · SCROLLING RIGHT → LEFT</p>
+      </div>
+      <div class="bit-marquee-wrap" style="width:100%;overflow:hidden;">
+        <div class="bit-marquee-track" style="display:flex;gap:20px;width:max-content;padding:0 10px;">
+          <sc-for list="{{ galleryLoop }}" as="nft" hint-placeholder-count="8">
+            <div style="flex:0 0 auto;width:clamp(180px,42vw,240px);background:#FFFFFF;border:3px solid #A3FF00;box-shadow:6px 6px 0 #0B0B0B;padding:10px;">
+              <div style="width:100%;aspect-ratio:1/1;overflow:hidden;background:#0B0B0B;border:3px solid #0B0B0B;">
+                <sc-if value="{{ nft.img }}" hint-placeholder-val="{{ false }}">
+                  <img src="{{ nft.img }}" alt="8BITBROKER NFT" style="width:100%;height:100%;object-fit:cover;display:block;image-rendering:pixelated;">
+                </sc-if>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;">
+                <span style="font-family:'Press Start 2P',monospace;font-size:9px;color:#0B0B0B;">{{ nft.id }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:11px;color:#0B0B0B;">8BITBROKER</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ROADMAP ===== -->
+    <section id="roadmap" style="padding:70px clamp(16px,5vw,64px);max-width:1200px;margin:0 auto;">
+      <div style="display:flex;gap:6px;margin-bottom:18px;">
+        <span style="width:12px;height:12px;background:#A3FF00;"></span>
+        <span style="width:12px;height:12px;background:#FFE500;"></span>
+        <span style="width:12px;height:12px;background:#FFFFFF;"></span>
+      </div>
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(20px,5vw,40px);margin:0;color:#FFFFFF;">ROAD<span style="color:#A3FF00;">MAP</span></h2>
+      <p style="font-family:'JetBrains Mono',monospace;font-weight:500;color:#FFFFFF;margin:16px 0 0;max-width:620px;line-height:1.7;font-size:15px;">Season 1 runs on a simple loop: mint, stake, earn $8BIT. Here is what holders can expect.</p>
+
+      <!-- phase cards -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px;margin-top:36px;">
+        <sc-for list="{{ phases }}" as="p" hint-placeholder-count="3">
+          <div style="{{ p.cardStyle }}">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+              <span style="font-family:'Press Start 2P',monospace;font-size:11px;">{{ p.tag }}</span>
+              <span style="font-family:'Press Start 2P',monospace;font-size:20px;opacity:.85;">{{ p.num }}</span>
+            </div>
+            <h3 style="font-family:'Press Start 2P',monospace;font-size:15px;margin:18px 0 12px;line-height:1.4;">{{ p.title }}</h3>
+            <div style="height:3px;width:52px;background:currentColor;margin-bottom:14px;"></div>
+            <sc-for list="{{ p.lines }}" as="ln" hint-placeholder-count="3">
+              <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;">
+                <span style="width:9px;height:9px;background:currentColor;flex:0 0 auto;margin-top:5px;"></span>
+                <span style="font-family:'JetBrains Mono',monospace;font-weight:600;font-size:13px;line-height:1.5;">{{ ln }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- daily staking progression -->
+      <div style="margin-top:44px;background:#FFFFFF;border:3px solid #0B0B0B;box-shadow:8px 8px 0 #A3FF00;padding:clamp(20px,4vw,34px);">
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:baseline;">
+          <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(13px,3vw,18px);margin:0;color:#0B0B0B;">DAILY STAKING WINDOW</h3>
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:14px;color:#0B0B0B;background:#A3FF00;padding:6px 12px;border:3px solid #0B0B0B;">OPENS 17:00 UTC</span>
+        </div>
+        <p style="font-family:'JetBrains Mono',monospace;font-weight:600;color:#0B0B0B;margin:14px 0 24px;font-size:14px;">Capacity follows a 4-day cycle until all 2,000 NFTs are accommodated across 8 staking days.</p>
+        <div style="display:flex;align-items:flex-end;gap:clamp(4px,1.2vw,10px);height:170px;">
+          <sc-for list="{{ days }}" as="d" hint-placeholder-count="8">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px;">
+              <span style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:10px;color:#0B0B0B;">{{ d.cap }}</span>
+              <div style="{{ d.barStyle }}"></div>
+              <span style="font-family:'Press Start 2P',monospace;font-size:8px;color:#0B0B0B;">{{ d.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:18px;">
+          <div style="display:inline-flex;align-items:center;gap:10px;background:#0B0B0B;border:3px solid #0B0B0B;padding:8px 14px;">
+            <span style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:11px;letter-spacing:1px;color:#FFFFFF;">TOTAL CAPACITY</span>
+            <span style="font-family:'Press Start 2P',monospace;font-size:13px;color:#A3FF00;">2,000 NFTs</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- season 2 -->
+      <div style="margin-top:28px;position:relative;background:#0B0B0B;border:3px dashed #FFE500;padding:clamp(28px,6vw,56px);text-align:center;overflow:hidden;">
+        <div style="filter:blur(7px);opacity:.35;user-select:none;pointer-events:none;">
+          <div style="font-family:'Press Start 2P',monospace;font-size:22px;color:#A3FF00;">████ ██████</div>
+          <p style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#FFFFFF;font-size:16px;">██████ ████████ ███ ████ ██████ ████████ ██ ████</p>
+        </div>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;">
+          <span style="width:18px;height:18px;background:#FFE500;animation:bit-bob 1.6s ease-in-out infinite;"></span>
+          <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(16px,4vw,26px);margin:0;color:#FFE500;">SEASON 2</h3>
+          <p style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#FFFFFF;margin:0;letter-spacing:2px;font-size:13px;">NEXT PHASE · TO BE ANNOUNCED</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== $8BIT TOKEN ===== -->
+    <section id="token" style="padding:70px clamp(16px,5vw,64px);background:#0B0B0B;border-top:3px solid #A3FF00;">
+      <div style="max-width:1200px;margin:0 auto;">
+        <p style="font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:3px;color:#FFFFFF;margin:0 0 12px;font-size:12px;">THE CURRENCY OF THE 8BIT</p>
+        <h2 style="font-family:'Press Start 2P',monospace;font-size:clamp(30px,9vw,72px);margin:0;color:#A3FF00;text-shadow:5px 5px 0 #0B0B0B;">$8BIT</h2>
+        <p style="font-family:'JetBrains Mono',monospace;font-weight:500;color:#FFFFFF;margin:20px 0 0;max-width:560px;line-height:1.7;font-size:15px;">A fixed-supply token powering Season 1 participation, the <span style="color:#FFE500;font-weight:800;">Staker Airdrop</span>, and the wider <span style="color:#A3FF00;font-weight:800;">8BIT</span> ecosystem.</p>
+
+        <!-- top stats -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-top:34px;">
+          <div style="border:3px solid #A3FF00;padding:16px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10px;letter-spacing:1px;color:#FFFFFF;margin-bottom:10px;">TOTAL SUPPLY</div>
+            <div style="font-family:'Press Start 2P',monospace;font-size:18px;color:#A3FF00;">1B</div>
+          </div>
+          <div style="border:3px solid #A3FF00;padding:16px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10px;letter-spacing:1px;color:#FFFFFF;margin-bottom:10px;">INFLATION</div>
+            <div style="font-family:'Press Start 2P',monospace;font-size:18px;color:#FFE500;">NONE</div>
+          </div>
+          <div style="border:3px solid #A3FF00;padding:16px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10px;letter-spacing:1px;color:#FFFFFF;margin-bottom:10px;">TRADING TAX</div>
+            <div style="font-family:'Press Start 2P',monospace;font-size:18px;color:#A3FF00;">0%</div>
+          </div>
+          <div style="border:3px solid #A3FF00;padding:16px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10px;letter-spacing:1px;color:#FFFFFF;margin-bottom:10px;">SEASON</div>
+            <div style="font-family:'Press Start 2P',monospace;font-size:18px;color:#FFE500;">01</div>
+          </div>
+        </div>
+
+        <!-- allocation -->
+        <h3 style="font-family:'Press Start 2P',monospace;font-size:clamp(14px,3vw,20px);margin:44px 0 20px;color:#FFFFFF;">TOKEN <span style="color:#A3FF00;">ALLOCATION</span></h3>
+        <div style="display:flex;flex-direction:column;gap:0;border:3px solid #A3FF00;">
+          <sc-for list="{{ alloc }}" as="a" hint-placeholder-count="5">
+            <div style="{{ a.rowStyle }}">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:14px;">
+                <span style="font-family:'Press Start 2P',monospace;font-size:clamp(10px,2.4vw,13px);color:#FFFFFF;">{{ a.label }}</span>
+                <span style="font-family:'Press Start 2P',monospace;font-size:clamp(16px,4vw,26px);color:#A3FF00;">{{ a.pct }}</span>
+              </div>
+              <div style="margin-top:12px;height:14px;width:100%;background:#0B0B0B;border:2px solid #FFFFFF;padding:1px;">
+                <div style="{{ a.barStyle }}"></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- token & NFT contracts -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:20px;margin-top:34px;">
+          <div style="background:#A3FF00;border:3px solid #0B0B0B;box-shadow:6px 6px 0 #0B0B0B;padding:20px;">
+            <div style="font-family:'Press Start 2P',monospace;font-size:11px;color:#0B0B0B;margin-bottom:14px;">$8BIT TOKEN CONTRACT</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:13px;color:#0B0B0B;word-break:break-all;line-height:1.6;">0x34C81F88926B83B1D6494691768A51F369033FB5</div>
+            <button onClick="{{ copyToken }}" style="margin-top:14px;font-family:'Press Start 2P',monospace;font-size:9px;background:#0B0B0B;color:#A3FF00;border:3px solid #0B0B0B;padding:10px 14px;cursor:pointer;" style-hover="color:#FFE500;">{{ copyTokenLabel }}</button>
+          </div>
+          <div style="background:#FFFFFF;border:3px solid #0B0B0B;box-shadow:6px 6px 0 #A3FF00;padding:20px;">
+            <div style="font-family:'Press Start 2P',monospace;font-size:11px;color:#0B0B0B;margin-bottom:14px;">8BITBROKER NFT CONTRACT</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:13px;color:#0B0B0B;word-break:break-all;line-height:1.6;">0x22f6377e2a161ea7f55ff4b4d8f8cb1f2c0d0015</div>
+            <button onClick="{{ copyNft }}" style="margin-top:14px;font-family:'Press Start 2P',monospace;font-size:9px;background:#0B0B0B;color:#FFFFFF;border:3px solid #0B0B0B;padding:10px 14px;cursor:pointer;" style-hover="color:#A3FF00;">{{ copyNftLabel }}</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer style="padding:48px clamp(16px,5vw,64px);background:#A3FF00;border-top:3px solid #0B0B0B;">
+      <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-start;">
+        <div>
+          <div style="font-family:'Press Start 2P',monospace;font-size:16px;color:#0B0B0B;">8BITBROKER</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#0B0B0B;margin-top:12px;font-size:11px;line-height:1.7;max-width:380px;">
+            <div style="margin-bottom:12px;word-break:break-all;">8BITBROKER NFT CONTRACT<br><span style="font-weight:800;">0x22f6377e2a161ea7f55ff4b4d8f8cb1f2c0d0015</span></div>
+            <div style="margin-bottom:12px;word-break:break-all;">$8BIT TOKEN CONTRACT<br><span style="font-weight:800;">0x34C81F88926B83B1D6494691768A51F369033FB5</span></div>
+            <div style="font-weight:800;">NETWORK · ROBINHOOD</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <a href="https://x.com/8BITBROKER" target="_blank" rel="noopener" style="font-family:'Press Start 2P',monospace;font-size:11px;color:#0B0B0B;background:#FFFFFF;border:3px solid #0B0B0B;box-shadow:4px 4px 0 #0B0B0B;padding:12px 16px;" style-hover="background:#FFE500;">X · @8BITBROKER</a>
+          <a href="https://opensea.io/collection/8bitbroker" target="_blank" rel="noopener" style="font-family:'Press Start 2P',monospace;font-size:11px;color:#0B0B0B;background:#FFFFFF;border:3px solid #0B0B0B;box-shadow:4px 4px 0 #0B0B0B;padding:12px 16px;" style-hover="background:#FFE500;">OPENSEA ▸</a>
+        </div>
+      </div>
+      <div style="max-width:1200px;margin:28px auto 0;border-top:3px solid #0B0B0B;padding-top:16px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11px;color:#0B0B0B;">© 8BITBROKER · SEASON 01 · ALL PIXELS RESERVED</div>
+    </footer>
+
+  </div>
+  </sc-if>
+
+  <!-- ============================================================ STAKE PAGE ============================================================ -->
+  <sc-if value="{{ isStake }}" hint-placeholder-val="{{ true }}">
+  <div style="padding:90px clamp(16px,5vw,64px) 70px;max-width:1180px;margin:0 auto;">
+    <button onClick="{{ goHome }}" style="font-family:'Press Start 2P',monospace;font-size:10px;background:#0B0B0B;color:#A3FF00;border:3px solid #A3FF00;padding:10px 14px;cursor:pointer;margin-bottom:26px;" style-hover="background:#A3FF00;color:#0B0B0B;">◂ BACK HOME</button>
+
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:flex-end;">
+      <div>
+        <h1 style="font-family:'Press Start 2P',monospace;font-size:clamp(20px,5vw,40px);margin:0;color:#FFFFFF;">8BITBROKER<br><span style="color:#A3FF00;">STAKING</span></h1>
+        <span style="display:inline-block;margin-top:16px;font-family:'Press Start 2P',monospace;font-size:12px;color:#0B0B0B;background:#FFE500;border:3px solid #0B0B0B;box-shadow:4px 4px 0 #0B0B0B;padding:8px 14px;">SEASON 01</span>
+      </div>
+      <!-- live countdown to daily window -->
+      <div style="border:3px solid #A3FF00;background:#0B0B0B;padding:16px 20px;min-width:230px;">
+        <div style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:10px;letter-spacing:2px;color:#FFFFFF;margin-bottom:10px;">NEXT STAKING WINDOW · 17:00 UTC</div>
+        <div style="font-family:'Press Start 2P',monospace;font-size:clamp(18px,4vw,26px);color:#A3FF00;">{{ countdown }}</div>
+      </div>
+    </div>
+
+    <!-- staking availability notice -->
+    <div style="margin-top:24px;background:#FFE500;border:3px solid #0B0B0B;box-shadow:6px 6px 0 #0B0B0B;padding:16px 20px;display:flex;gap:14px;align-items:flex-start;">
+      <span style="width:14px;height:14px;background:#0B0B0B;flex:0 0 auto;margin-top:3px;"></span>
+      <p style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#0B0B0B;margin:0;font-size:13px;line-height:1.6;">Staking opens daily at 17:00 UTC. Connect your wallet during the window to stake eligible 8BITBROKER NFTs. Each staked NFT is locked for 10 days until its $8BIT airdrop is distributed.</p>
+    </div>
+
+    <!-- wallet + panels -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px;margin-top:24px;">
+
+      <!-- WALLET -->
+      <div style="border:3px solid #A3FF00;background:#0B0B0B;padding:22px;">
+        <h3 style="font-family:'Press Start 2P',monospace;font-size:12px;margin:0 0 16px;color:#FFFFFF;">WALLET</h3>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;">
+          <span style="width:12px;height:12px;background:#FFE500;"></span>
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#FFE500;font-size:13px;">NOT CONNECTED</span>
+        </div>
+        <button onClick="{{ toggleWalletNotice }}" style="width:100%;font-family:'Press Start 2P',monospace;font-size:12px;background:#A3FF00;color:#0B0B0B;border:3px solid #0B0B0B;box-shadow:5px 5px 0 #0B0B0B;padding:16px;cursor:pointer;transition:transform .08s,box-shadow .08s;" style-hover="transform:translate(2px,2px);box-shadow:3px 3px 0 #0B0B0B;">CONNECT WALLET</button>
+        <sc-if value="{{ walletNotice }}" hint-placeholder-val="{{ false }}">
+          <div style="margin:14px 0 0;border-left:3px solid #A3FF00;padding-left:12px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#FFFFFF;font-size:11px;letter-spacing:1px;margin-bottom:6px;">STAKING OPENS DAILY AT</div>
+            <div style="font-family:'Press Start 2P',monospace;font-size:14px;color:#A3FF00;margin-bottom:12px;">17:00 UTC</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#FFFFFF;font-size:11px;letter-spacing:1px;margin-bottom:6px;">{{ nextWindowLabel }}</div>
+            <div style="font-family:'Press Start 2P',monospace;font-size:13px;color:#FFE500;">{{ countdown }}</div>
+          </div>
+        </sc-if>
+      </div>
+
+      <!-- REWARD -->
+      <div style="border:3px solid #A3FF00;background:#0B0B0B;padding:22px;">
+        <h3 style="font-family:'Press Start 2P',monospace;font-size:12px;margin:0 0 16px;color:#FFFFFF;">REWARD PER NFT</h3>
+        <div style="font-family:'Press Start 2P',monospace;font-size:clamp(22px,6vw,34px);color:#A3FF00;">$0.46</div>
+        <p style="font-family:'JetBrains Mono',monospace;font-weight:600;color:#FFFFFF;font-size:13px;margin:14px 0 0;line-height:1.6;">Paid in <span style="color:#FFE500;font-weight:800;">$8BIT</span>, equal to the 0.00025 ETH mint fee. Calculated independently for every staked NFT.</p>
+      </div>
+
+      <!-- STATUS -->
+      <div style="border:3px solid #A3FF00;background:#0B0B0B;padding:22px;">
+        <h3 style="font-family:'Press Start 2P',monospace;font-size:12px;margin:0 0 16px;color:#FFFFFF;">STATUS</h3>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;"><span style="color:#FFFFFF;">STAKED</span><span style="color:#A3FF00;">— / —</span></div>
+          <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;"><span style="color:#FFFFFF;">PENDING $8BIT</span><span style="color:#A3FF00;">—</span></div>
+          <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;"><span style="color:#FFFFFF;">LOCK</span><span style="color:#FFE500;">10 DAYS / NFT</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ELIGIBLE + STAKED -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px;">
+      <div style="border:3px solid #FFFFFF;background:#0B0B0B;padding:22px;grid-column:1/-1;">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:18px;">
+          <h3 style="font-family:'Press Start 2P',monospace;font-size:12px;margin:0;color:#FFFFFF;">ELIGIBLE NFTs</h3>
+          <button disabled style="font-family:'Press Start 2P',monospace;font-size:10px;background:#0B0B0B;color:#FFE500;border:3px solid #FFE500;padding:12px 16px;opacity:.6;cursor:not-allowed;">STAKE</button>
+        </div>
+        <div style="border:3px dashed #FFFFFF;padding:34px 18px;text-align:center;">
+          <span style="display:inline-block;width:16px;height:16px;background:#A3FF00;margin-bottom:14px;"></span>
+          <p style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#FFFFFF;margin:0;font-size:13px;">Connect a wallet to load your eligible 8BITBROKER NFTs.</p>
+        </div>
+      </div>
+      <div style="border:3px solid #FFFFFF;background:#0B0B0B;padding:22px;grid-column:1/-1;">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:18px;">
+          <h3 style="font-family:'Press Start 2P',monospace;font-size:12px;margin:0;color:#FFFFFF;">STAKED NFTs</h3>
+          <button disabled style="font-family:'Press Start 2P',monospace;font-size:10px;background:#0B0B0B;color:#FFE500;border:3px solid #FFE500;padding:12px 16px;opacity:.6;cursor:not-allowed;">UNSTAKE</button>
+        </div>
+        <div style="border:3px dashed #FFFFFF;padding:34px 18px;text-align:center;">
+          <span style="display:inline-block;width:16px;height:16px;background:#FFE500;margin-bottom:14px;"></span>
+          <p style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#FFFFFF;margin:0;font-size:13px;">No staked NFTs yet. Staked NFTs unlock after their 10-day period and airdrop complete.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- staking capacity breakdown -->
+    <div style="border:3px solid #A3FF00;background:#0B0B0B;padding:22px;margin-top:20px;">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center;margin-bottom:18px;">
+        <h3 style="font-family:'Press Start 2P',monospace;font-size:12px;margin:0;color:#FFFFFF;">STAKING CAPACITY</h3>
+        <span style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:12px;color:#0B0B0B;background:#A3FF00;padding:6px 12px;">TOTAL — 2,000 NFTs</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:10px;">
+        <sc-for list="{{ days }}" as="d" hint-placeholder-count="8">
+          <div style="border:3px solid #FFFFFF;padding:12px;text-align:center;">
+            <div style="font-family:'Press Start 2P',monospace;font-size:11px;color:#FFE500;margin-bottom:8px;">{{ d.label }}</div>
+            <div style="font-family:'Press Start 2P',monospace;font-size:13px;color:#A3FF00;">{{ d.cap }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <p style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#FFFFFF;font-size:12px;margin:16px 0 0;line-height:1.6;">Daily window opens 17:00 UTC. Each staked NFT has its own 10-day staking period — it becomes unstake-eligible only after that period and its airdrop complete.</p>
+    </div>
+
+    <!-- info cards -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:20px;margin-top:20px;">
+      <div style="background:#FFFFFF;border:3px solid #0B0B0B;box-shadow:6px 6px 0 #A3FF00;padding:22px;">
+        <h3 style="font-family:'Press Start 2P',monospace;font-size:11px;margin:0 0 14px;color:#0B0B0B;">DAILY WINDOW</h3>
+        <p style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#0B0B0B;font-size:13px;line-height:1.7;margin:0;">Opens 17:00 UTC daily. Capacity runs a 4-day cycle (100 / 200 / 300 / 400) across 8 days for the full 2,000.</p>
+      </div>
+      <div style="background:#FFFFFF;border:3px solid #0B0B0B;box-shadow:6px 6px 0 #FFE500;padding:22px;">
+        <h3 style="font-family:'Press Start 2P',monospace;font-size:11px;margin:0 0 14px;color:#0B0B0B;">AIRDROP</h3>
+        <p style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#0B0B0B;font-size:13px;line-height:1.7;margin:0;">21 August · 13:00 UTC. Distributed in $8BIT with no vesting or lock after distribution.</p>
+      </div>
+      <div style="background:#FFFFFF;border:3px solid #0B0B0B;box-shadow:6px 6px 0 #A3FF00;padding:22px;">
+        <h3 style="font-family:'Press Start 2P',monospace;font-size:11px;margin:0 0 14px;color:#0B0B0B;">HOW IT WORKS</h3>
+        <p style="font-family:'JetBrains Mono',monospace;font-weight:700;color:#0B0B0B;font-size:13px;line-height:1.7;margin:0;">Each NFT is staked independently. Stake as many as you hold — rewards are counted per NFT.</p>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: &quot;100%&quot;, &quot;height&quot;: 900 },
+  &quot;tokenUrl&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;https://opensea.io/token/robinhood/0x34c81f88926b83b1d6494691768a51f369033fb5&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Links&quot; },
+  &quot;openseaUrl&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;https://opensea.io/collection/8bitbroker&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Links&quot; }
+}">
+// ============================================================
+//  8BITBROKER — EDITABLE PROJECT CONFIG
+//  Change project data here. Future on-chain integration
+//  can read from this same object without a redesign.
+// ============================================================
+const CONFIG = {
+  name: "8BITBROKER",
+  supply: "2,000",
+  mintFee: "0.00025 ETH",
+  network: "Robinhood",
+  contract: "0x22f6377e2a161ea7f55ff4b4d8f8cb1f2c0d0015",
+  openseaUrl: "https://opensea.io/collection/8bitbroker",
+  x: "@8BITBROKER",
+  // Official $8BIT token link + contract:
+  tokenUrl: "https://opensea.io/token/robinhood/0x34c81f88926b83b1d6494691768a51f369033fb5",
+  tokenContract: "0x34C81F88926B83B1D6494691768A51F369033FB5",
+  // NFT GALLERY IMAGES — add / replace freely:
+  gallery: [
+    "1354b639990643f6c572a815fb0daa6c.jpg",
+    "2fa0552cea885161f3f5c9ae06a4a45a.jpg",
+    "3170744cac34405f6b609ed4869ba4ee.jpg",
+    "349c0999b871de60a553a61560a3d9c0.jpg",
+    "3f196af4a8d0e3dfad1a6eb0e6cbf5dd.jpg",
+    "606fcb6f78f3b834ce3cb071ab32a7be.jpg",
+    "666d55a34fb728f82547c0d12f46a9f9.jpg",
+    "7ada4c8e4018b188afb501d61cf41f87.jpg",
+    "7b50cb62537e9ab35e721ffc43238477.jpg",
+    "a5865e2bfcf5df4bb7edaaba5b1ac20c.jpg",
+    "c4fdbf83d9f85899e53fab7576bea6fd.jpg",
+    "d1ca6ca1567a4675b1dbc094fc607faa.jpg",
+    "d9fe9689b08f7cc1f254b11425e4f407.jpg"
+  ]
+};
+const IMG_BASE = "uploads/Nft%20image/";
+
+class Component extends DCLogic {
+  state = { page: "home", menuOpen: false, walletNotice: false, countdown: "--:--:--", copiedNft: false, copiedToken: false };
+
+  copy(text, which) {
+    const done = () => this.setState(which === "nft" ? { copiedNft: true } : { copiedToken: true },
+      () => setTimeout(() => this.setState(which === "nft" ? { copiedNft: false } : { copiedToken: false }), 1400));
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done, done); }
+      else {
+        const ta = document.createElement("textarea");
+        ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta); done();
+      }
+    } catch (e) { done(); }
+  }
+
+  componentDidMount() {
+    this.tick();
+    this._t = setInterval(() => this.tick(), 1000);
+  }
+  componentWillUnmount() { clearInterval(this._t); }
+
+  tick() {
+    const now = new Date();
+    const target = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 17, 0, 0));
+    if (now.getTime() >= target.getTime()) target.setUTCDate(target.getUTCDate() + 1);
+    let s = Math.floor((target.getTime() - now.getTime()) / 1000);
+    const h = String(Math.floor(s / 3600)).padStart(2, "0"); s %= 3600;
+    const m = String(Math.floor(s / 60)).padStart(2, "0");
+    const sec = String(s % 60).padStart(2, "0");
+    this.setState({ countdown: `${h}:${m}:${sec}` });
+  }
+
+  toggleMenu() { this.setState(s => ({ menuOpen: !s.menuOpen })); }
+  toggleWalletNotice() { this.setState(s => ({ walletNotice: !s.walletNotice })); }
+  goHome() { this.setState({ page: "home", menuOpen: false }); window.scrollTo(0, 0); }
+  goStake() { this.setState({ page: "stake", menuOpen: false }); window.scrollTo(0, 0); }
+  goSection(id) {
+    this.setState({ page: "home", menuOpen: false }, () => {
+      requestAnimationFrame(() => {
+        const el = document.getElementById(id);
+        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset - 64, behavior: "smooth" });
+      });
+    });
+  }
+
+  renderVals() {
+    const tokenUrl = this.props.tokenUrl ?? CONFIG.tokenUrl;
+    const openseaUrl = this.props.openseaUrl ?? CONFIG.openseaUrl;
+
+    const galleryLoop = CONFIG.gallery.concat(CONFIG.gallery).map((f, i) => ({
+      img: IMG_BASE + f,
+      id: "#" + String((i % CONFIG.gallery.length) + 1).padStart(3, "0")
+    }));
+
+    const menuItems = [
+      { num: "01", label: "HOME", action: () => this.goSection("home") },
+      { num: "02", label: "NFT GALLERY", action: () => this.goSection("gallery") },
+      { num: "03", label: "ROADMAP", action: () => this.goSection("roadmap") },
+      { num: "04", label: "$8BIT", action: () => this.goSection("token") },
+      { num: "05", label: "STAKE", action: () => this.goStake() }
+    ];
+
+    // roadmap phase cards
+    const cardBase = "border:3px solid #0B0B0B;box-shadow:8px 8px 0 #0B0B0B;padding:24px;";
+    const phases = [
+      { tag: "MINT", num: "01", title: "MINT — 11 AUG · 13:00 UTC",
+        cardStyle: cardBase + "background:#A3FF00;color:#0B0B0B;",
+        lines: ["2,000 NFT supply", "0.00025 ETH mint fee", "Holders unlock Season 1"] },
+      { tag: "STAKE", num: "02", title: "STAKE & EARN",
+        cardStyle: cardBase + "background:#FFFFFF;color:#0B0B0B;",
+        lines: ["Stake each NFT to qualify", "10-day lock per NFT", "$0.46 $8BIT reward per NFT"] },
+      { tag: "AIRDROP", num: "03", title: "AIRDROP — 21 AUG · 13:00 UTC",
+        cardStyle: cardBase + "background:#FFE500;color:#0B0B0B;",
+        lines: ["Exactly 10 days after mint", "Paid in $8BIT tokens", "No vesting — no lock"] }
+    ];
+
+    // daily staking window — repeating 4-day cycle (100,200,300,400) across 8 days = 2,000
+    const cycle = [100, 200, 300, 400];
+    const days = [];
+    for (let d = 1; d <= 8; d++) {
+      const cap = cycle[(d - 1) % 4];
+      const h = Math.round((cap / 400) * 100);
+      days.push({
+        label: "D" + d,
+        cap: cap,
+        barStyle: `width:100%;height:${h}%;min-height:6px;background:${((d - 1) % 4) < 2 ? "#A3FF00" : "#FFE500"};border:2px solid #0B0B0B;`
+      });
+    }
+
+    // tokenomics rows
+    const rowBase = "padding:18px 20px;border-bottom:3px solid #A3FF00;background:#0B0B0B;";
+    const rowLast = "padding:18px 20px;background:#0B0B0B;";
+    const allocData = [
+      ["STAKER AIRDROP", 40], ["LIQUIDITY", 20], ["TREASURY", 15], ["PROMOTION", 15], ["TEAM", 10]
+    ];
+    const alloc = allocData.map((a, i) => ({
+      label: a[0], pct: a[1] + "%",
+      rowStyle: (i === allocData.length - 1 ? rowLast : rowBase),
+      barStyle: `height:100%;width:${a[1]}%;background:${i % 2 === 0 ? "#A3FF00" : "#FFE500"};`
+    }));
+
+    return {
+      isHome: this.state.page === "home",
+      isStake: this.state.page === "stake",
+      menuOpen: this.state.menuOpen,
+      walletNotice: this.state.walletNotice,
+      countdown: this.state.countdown,
+      menuStyle: `position:fixed;inset:0;z-index:80;background:rgba(11,11,11,0.98);display:flex;align-items:center;justify-content:center;transition:transform .28s steps(6,end),opacity .2s;transform:translateX(${this.state.menuOpen ? "0" : "100%"});opacity:${this.state.menuOpen ? "1" : "0"};pointer-events:${this.state.menuOpen ? "auto" : "none"};`,
+      tokenUrl, openseaUrl,
+      galleryLoop, menuItems, phases, days, alloc,
+      nextWindowLabel: (new Date().getUTCHours() < 17) ? "NEXT WINDOW · TODAY — 17:00 UTC" : "NEXT WINDOW · TOMORROW — 17:00 UTC",
+      copyNftLabel: this.state.copiedNft ? "COPIED ✓" : "COPY",
+      copyTokenLabel: this.state.copiedToken ? "COPIED ✓" : "COPY",
+      copyNft: () => this.copy(CONFIG.contract, "nft"),
+      copyToken: () => this.copy(CONFIG.tokenContract, "token"),
+      toggleMenu: () => this.toggleMenu(),
+      toggleWalletNotice: () => this.toggleWalletNotice(),
+      goHome: () => this.goHome(),
+      goStake: () => this.goStake()
+    };
+  }
+}
+</script>
+</body>
+</html>
